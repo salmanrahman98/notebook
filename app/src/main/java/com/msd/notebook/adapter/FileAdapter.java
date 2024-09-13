@@ -64,6 +64,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
         return files.size();
     }
 
+    public interface FileBtnClick {
+        void btnClick(InstructorFiles file);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         FileItemBinding binding;
@@ -72,9 +76,5 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
             super(itemView);
             binding = FileItemBinding.bind(itemView);
         }
-    }
-
-    public interface FileBtnClick {
-        void btnClick(InstructorFiles file);
     }
 }

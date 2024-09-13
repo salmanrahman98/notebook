@@ -2,12 +2,12 @@ package com.msd.notebook.models;
 
 public class Instructor {
 
+    String id, instructorName;
+
     public Instructor(String id, String instructorName) {
         this.id = id;
         this.instructorName = instructorName;
     }
-
-    String id, instructorName;
 
     public String getId() {
         return id;

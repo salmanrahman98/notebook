@@ -10,9 +10,11 @@ public class PreferenceClass {
     private static PreferenceClass sSharedPrefs;
     private final SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
+
     public PreferenceClass(Context context) {
         mPref = context.getSharedPreferences(SETTINGS_NAME, Context.MODE_PRIVATE);
     }
+
     public static PreferenceClass getInstance(Context context) {
         if (sSharedPrefs == null) {
             sSharedPrefs = new PreferenceClass(context.getApplicationContext());
@@ -35,9 +37,10 @@ public class PreferenceClass {
     }
 
     private void doEdit() {
-            mEditor = mPref.edit();
+        mEditor = mPref.edit();
 
     }
+
     private void doCommit() {
         if (mEditor != null) {
             mEditor.commit();

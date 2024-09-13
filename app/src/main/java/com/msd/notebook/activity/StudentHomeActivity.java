@@ -115,7 +115,6 @@ public class StudentHomeActivity extends AppCompatActivity {
     }
 
 
-
     private void getInstructor(String instructorId) {
 
         isExists = false;
@@ -125,7 +124,7 @@ public class StudentHomeActivity extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    
+
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         ProgressBarClass.getInstance().dismissProgress();
                         if (task.isSuccessful()) {

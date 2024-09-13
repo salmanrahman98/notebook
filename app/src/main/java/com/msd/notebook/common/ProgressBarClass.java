@@ -12,6 +12,7 @@ public class ProgressBarClass {
 
     public ProgressBarClass() {
     }
+
     public static ProgressBarClass getInstance() {
         return ourInstance;
     }

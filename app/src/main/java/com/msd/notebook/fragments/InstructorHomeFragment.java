@@ -7,7 +7,6 @@ import static com.msd.notebook.common.Constants.FILE_NAME;
 import static com.msd.notebook.common.Constants.FILE_URL;
 import static com.msd.notebook.common.Constants.FIRESTORE_DOC_ID;
 import static com.msd.notebook.common.Constants.INSTRUCTOR;
-import static com.msd.notebook.common.Constants.YOUR_INSTRUCTORS;
 import static com.msd.notebook.common.Constants.YOUR_UPLOADS;
 
 import android.app.ProgressDialog;

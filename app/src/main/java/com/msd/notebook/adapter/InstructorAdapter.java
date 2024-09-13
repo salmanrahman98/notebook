@@ -64,6 +64,12 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.Vi
         return instructorList.size();
     }
 
+    public interface InstructorItemClick {
+        void itemClick(Instructor instructor);
+
+        void itemCardClick(Instructor instructor);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         InstructorItemBinding binding;
@@ -72,10 +78,5 @@ public class InstructorAdapter extends RecyclerView.Adapter<InstructorAdapter.Vi
             super(itemView);
             binding = InstructorItemBinding.bind(itemView);
         }
-    }
-
-    public interface InstructorItemClick {
-        void itemClick(Instructor instructor);
-        void itemCardClick(Instructor instructor);
     }
 }

@@ -11,8 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.msd.notebook.activity.LoginActivity;
 import com.msd.notebook.R;
+import com.msd.notebook.activity.LoginActivity;
 
 import org.jetbrains.annotations.NotNull;
 
