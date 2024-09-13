@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Notebook</string>
+    <string name="txt_enter_email">Enter Email</string>
+    <string name="txt_email">Email</string>
+    <string name="txt_password">Password</string>
+    <string name="txt_enter_password">Enter Password</string>
+    <string name="please_wait">Please wait</string>
+    <string name="txt_please_enter_this_field">Please enter this field</string>
+    <string name="txt_enter_username">Enter Username</string>
+    <string name="txt_username">Username</string>
+    <string name="title_settings">settings</string>
+    <string name="home">Home</string>
+    <string name="your_qr">Your QR code</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="your_instructors_list">Your Instructors List</string>
+    <string name="files_of">Files of</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="updated_password_successfully">updated password successfully</string>
+    <string name="settings">Settings</string>
+    <string name="your_qr_code">Your QR Code</string>
+</resources>
