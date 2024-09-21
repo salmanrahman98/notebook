@@ -1,4 +1,4 @@
-package com.msd.notebook.adapter
+package com.msd.notebook.view.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import com.msd.notebook.models.InstructorFiles
 
 class FileAdapter(var context: Context, signedInAsInstructor: Boolean, fileBtnClick: FileBtnClick) :
     RecyclerView.Adapter<FileAdapter.ViewHolder>() {
-    var files: ArrayList<InstructorFiles>? = null
+    var files: ArrayList<InstructorFiles>? = (java.util.ArrayList());
     var signedInAsInstructor = true
     var fileBtnClick: FileBtnClick
 

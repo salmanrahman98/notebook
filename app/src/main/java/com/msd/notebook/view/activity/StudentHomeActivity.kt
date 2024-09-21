@@ -1,4 +1,4 @@
-package com.msd.notebook.activity
+package com.msd.notebook.view.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,8 +14,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
-import com.msd.notebook.adapter.InstructorAdapter
-import com.msd.notebook.adapter.InstructorAdapter.InstructorItemClick
+import com.msd.notebook.view.adapter.InstructorAdapter
+import com.msd.notebook.view.adapter.InstructorAdapter.InstructorItemClick
 import com.msd.notebook.common.Constants
 import com.msd.notebook.common.PreferenceClass
 import com.msd.notebook.common.ProgressBarClass

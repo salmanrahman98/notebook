@@ -1,4 +1,4 @@
-package com.msd.notebook.fragments
+package com.msd.notebook.view.fragments
 
 import android.app.Activity
 import android.app.ProgressDialog
@@ -18,8 +18,8 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.msd.notebook.adapter.FileAdapter
-import com.msd.notebook.adapter.FileAdapter.FileBtnClick
+import com.msd.notebook.view.adapter.FileAdapter
+import com.msd.notebook.view.adapter.FileAdapter.FileBtnClick
 import com.msd.notebook.common.Constants
 import com.msd.notebook.common.PreferenceClass
 import com.msd.notebook.common.ProgressBarClass

@@ -1,4 +1,4 @@
-package com.msd.notebook.activity
+package com.msd.notebook.view.activity
 
 import android.app.DownloadManager
 import android.content.Context
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.msd.notebook.adapter.FileAdapter
+import com.msd.notebook.view.adapter.FileAdapter
 import com.msd.notebook.common.Constants
 import com.msd.notebook.common.PreferenceClass
 import com.msd.notebook.common.ProgressBarClass
@@ -132,7 +132,6 @@ class InstructorFilesActivity : AppCompatActivity() {
                     } else {
                         Log.e("HomeFragment", "Error getting documents.", task.exception)
                     }
-
                 }
         }
 }

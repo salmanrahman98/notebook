@@ -1,4 +1,4 @@
-package com.msd.notebook.fragments
+package com.msd.notebook.view.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

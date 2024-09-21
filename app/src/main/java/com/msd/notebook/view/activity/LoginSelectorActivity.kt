@@ -1,4 +1,4 @@
-package com.msd.notebook.activity
+package com.msd.notebook.view.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.msd.notebook.common.Constants
 import com.msd.notebook.databinding.ActivityLoginBinding
 
-class LoginActivity : AppCompatActivity() {
+class LoginSelectorActivity : AppCompatActivity() {
     var binding: ActivityLoginBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,12 +15,12 @@ class LoginActivity : AppCompatActivity() {
         val view: View = binding!!.getRoot()
         setContentView(view)
         binding!!.signInCardInstructor.setOnClickListener {
-            val intent = Intent(this@LoginActivity, SignInActivity::class.java)
+            val intent = Intent(this@LoginSelectorActivity, SignInActivity::class.java)
             intent.putExtra(Constants.SIGN_IN_AS, Constants.INSTRUCTOR)
             startActivity(intent)
         }
         binding!!.signInCardStudent.setOnClickListener {
-            val intent = Intent(this@LoginActivity, SignInActivity::class.java)
+            val intent = Intent(this@LoginSelectorActivity, SignInActivity::class.java)
             intent.putExtra(Constants.SIGN_IN_AS, Constants.STUDENT)
             startActivity(intent)
         }

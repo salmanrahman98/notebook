@@ -1,4 +1,4 @@
-package com.msd.notebook.activity
+package com.msd.notebook.view.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -70,8 +70,7 @@ class SignInActivity : AppCompatActivity() {
                     if (!isUserFound) {
                         createUserInFirebase(signInAs)
                     }
-                    for (i in 1..5) {
-                    }
+
                 } else {
                     ProgressBarClass.instance.dismissProgress()
                     Toast.makeText(

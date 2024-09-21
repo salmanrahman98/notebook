@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_blue"
-    tools:context=".activity.HomeActivity">
+    tools:context=".view.activity.HomeActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/bottom_navigation_card"

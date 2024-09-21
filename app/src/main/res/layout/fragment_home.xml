@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_blue"
-    tools:context=".fragments.InstructorHomeFragment">
+    tools:context=".view.fragments.InstructorHomeFragment">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/header_title"
