@@ -1,4 +1,4 @@
-package com.msd.notebook.fragments
+package com.msd.notebook.view.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.msd.notebook.R
-import com.msd.notebook.activity.LoginActivity
+import com.msd.notebook.view.activity.LoginSelectorActivity
 
 class BoardingFragments : Fragment() {
     override fun onCreateView(
@@ -32,7 +32,7 @@ class BoardingFragments : Fragment() {
             1 -> {
                 view = inflater.inflate(R.layout.boarding_screen2, container, false)
                 view.findViewById<View>(R.id.next_card).setOnClickListener {
-                    val intent = Intent(activity, LoginActivity::class.java)
+                    val intent = Intent(activity, LoginSelectorActivity::class.java)
                     startActivity(intent)
                 }
                 view
@@ -45,11 +45,4 @@ class BoardingFragments : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
 }

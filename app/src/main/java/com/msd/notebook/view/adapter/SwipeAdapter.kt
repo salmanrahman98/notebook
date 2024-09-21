@@ -1,11 +1,11 @@
-package com.msd.notebook.adapter
+package com.msd.notebook.view.adapter
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.msd.notebook.fragments.BoardingFragments
+import com.msd.notebook.view.fragments.BoardingFragments
 
 class SwipeAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {

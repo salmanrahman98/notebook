@@ -1,4 +1,4 @@
-package com.msd.notebook.adapter
+package com.msd.notebook.view.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import com.msd.notebook.models.Instructor
 
 class InstructorAdapter(var context: Context, var instructorItemClick: InstructorItemClick) :
     RecyclerView.Adapter<InstructorAdapter.ViewHolder>() {
-    var instructorList : ArrayList<Instructor>? = null
+    var instructorList : ArrayList<Instructor>? = ArrayList()
     fun updateInstructorList(instructorList: ArrayList<Instructor>) {
         this.instructorList = instructorList
         notifyDataSetChanged()

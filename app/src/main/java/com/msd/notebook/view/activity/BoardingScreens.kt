@@ -1,10 +1,10 @@
-package com.msd.notebook.activity
+package com.msd.notebook.view.activity
 
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.msd.notebook.adapter.SwipeAdapter
+import com.msd.notebook.view.adapter.SwipeAdapter
 import com.msd.notebook.databinding.ActivityBoardingScreensBinding
 
 class BoardingScreens : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.msd.notebook.activity
+package com.msd.notebook.view.activity
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.msd.notebook.R
 import com.msd.notebook.databinding.ActivityHomeBinding
-import com.msd.notebook.fragments.InstructorHomeFragment
-import com.msd.notebook.fragments.QrCodeDisplayFrag
-import com.msd.notebook.fragments.SettingsFragment
+import com.msd.notebook.view.fragments.InstructorHomeFragment
+import com.msd.notebook.view.fragments.QrCodeDisplayFrag
+import com.msd.notebook.view.fragments.SettingsFragment
 
 class HomeActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
     var binding: ActivityHomeBinding? = null
