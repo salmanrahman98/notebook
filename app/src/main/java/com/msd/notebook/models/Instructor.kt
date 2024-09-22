@@ -1,3 +1,6 @@
 package com.msd.notebook.models
 
-class Instructor(var id: String, var instructorName: String)
+data class Instructor(
+    var instructor_id: String? = "",
+    var instructor_name: String? = ""
+)

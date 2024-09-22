@@ -24,8 +24,8 @@ class InstructorAdapter(var context: Context, var instructorItemClick: Instructo
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.instructorNameTxt.text = instructorList?.get(position)!!.instructorName
-        holder.binding.instructorId.text = instructorList!![position].id
+        holder.binding.instructorNameTxt.text = instructorList?.get(position)!!.instructor_name
+        holder.binding.instructorId.text = instructorList!![position].instructor_id
         holder.binding.itemRoot.setOnClickListener {
             instructorItemClick.itemClick(
                 instructorList!![holder.getAdapterPosition()]

@@ -2,25 +2,22 @@ package com.msd.notebook.view.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.helper.widget.MotionEffect
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
-import com.msd.notebook.view.adapter.InstructorAdapter
-import com.msd.notebook.view.adapter.InstructorAdapter.InstructorItemClick
 import com.msd.notebook.common.Constants
 import com.msd.notebook.common.PreferenceClass
-import com.msd.notebook.common.ProgressBarClass
 import com.msd.notebook.databinding.ActivityStudentHomeBinding
 import com.msd.notebook.models.Instructor
+import com.msd.notebook.view.adapter.InstructorAdapter
+import com.msd.notebook.view.adapter.InstructorAdapter.InstructorItemClick
+import com.msd.notebook.view.viewmodels.StudentHomeViewModel
 
 class StudentHomeActivity : AppCompatActivity() {
     var binding: ActivityStudentHomeBinding? = null
@@ -30,11 +27,17 @@ class StudentHomeActivity : AppCompatActivity() {
     var instructorName = ""
     var adapter: InstructorAdapter? = null
     var instructorList: ArrayList<Instructor> = ArrayList()
+
+    private lateinit var viewModel: StudentHomeViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStudentHomeBinding.inflate(layoutInflater)
         val view: View = binding!!.getRoot()
         setContentView(view)
+
+        viewModel = ViewModelProvider(this).get(StudentHomeViewModel::class.java)
+
         preferenceClass = PreferenceClass(this@StudentHomeActivity)
         //setting the options for gms barcode
         val options = GmsBarcodeScannerOptions.Builder()
@@ -50,7 +53,13 @@ class StudentHomeActivity : AppCompatActivity() {
             val scanner = GmsBarcodeScanning.getClient(this@StudentHomeActivity, options)
             scanner
                 .startScan()
-                .addOnSuccessListener { barcode: Barcode -> getInstructor(barcode.rawValue) }
+                .addOnSuccessListener { barcode: Barcode ->
+                    barcode.rawValue?.let { it1 ->
+                        addInstructor(
+                            it1
+                        )
+                    }
+                }
                 .addOnCanceledListener {
                     Toast.makeText(
                         this@StudentHomeActivity,
@@ -71,8 +80,8 @@ class StudentHomeActivity : AppCompatActivity() {
         adapter = InstructorAdapter(this@StudentHomeActivity, object : InstructorItemClick {
             override fun itemClick(instructor: Instructor?) {
                 val intent = Intent(this@StudentHomeActivity, InstructorFilesActivity::class.java)
-                intent.putExtra(Constants.INSTRUCTOR_ID, instructor?.id)
-                intent.putExtra(Constants.INSTRUCTOR_NAME, instructor?.instructorName)
+                intent.putExtra(Constants.INSTRUCTOR_ID, instructor?.instructor_id)
+                intent.putExtra(Constants.INSTRUCTOR_NAME, instructor?.instructor_name)
                 startActivity(intent)
             }
 
@@ -86,96 +95,31 @@ class StudentHomeActivity : AppCompatActivity() {
         yourInstructorList()
     }
 
-    private fun getInstructor(instructorId: String?) {
-        isExists = false
-        instructorName = ""
-        db.collection(Constants.INSTRUCTOR)
-            .get()
-            .addOnCompleteListener { task ->
-                ProgressBarClass.instance.dismissProgress()
-                if (task.isSuccessful) {
-                    for (document in task.result) {
-                        Log.d(MotionEffect.TAG, document.id + " => " + document.getData())
-                        if (document.id
-                                .equals(instructorId, ignoreCase = true)
-                        ) {
-                            instructorName = document[Constants.NAME].toString()
-                            isExists = true
-                        }
-                    }
-                    if (isExists) {
-                        Toast.makeText(
-                            this@StudentHomeActivity,
-                            "Instructor found",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        addInstructorToStudentList(instructorId)
-                    } else {
-                        Toast.makeText(
-                            this@StudentHomeActivity,
-                            "Instructor not found, please try again",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } else {
-                    Log.w(MotionEffect.TAG, "Error getting documents.", task.exception)
-                }
+
+    private fun addInstructor(instructorId: String) {
+        viewModel.instructor.observe(this) { instructor ->
+            //addInstructor
+            if (instructor != null) {
+                instructorList.clear()
+                yourInstructorList()
+            } else {
+                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
             }
+        }
+        viewModel.fetchInstructor(
+            instructorId,
+            preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)!!
+        )
     }
 
-    private fun addInstructorToStudentList(instructorId: String?) {
-        val file: MutableMap<String, Any?> = HashMap()
-        file[Constants.INSTRUCTOR_ID] = instructorId
-        file[Constants.INSTRUCTOR_NAME] = instructorName
+    private fun yourInstructorList() {
+        viewModel.instructorsList.observe(this) { teachers ->
+            adapter?.updateInstructorList(ArrayList(teachers))
+        }
+
         val userDoc = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
-        if (userDoc != null) {
-            db.collection(Constants.STUDENT)
-                .document(userDoc)
-                .collection(Constants.YOUR_INSTRUCTORS)
-                .add(file)
-                .addOnSuccessListener(object : OnSuccessListener<DocumentReference?> {
-                    override fun onSuccess(documentReference: DocumentReference?) {
-                        Toast.makeText(this@StudentHomeActivity, "Instructor Added", Toast.LENGTH_SHORT)
-                            .show()
-                        instructorList.clear()
-                        yourInstructorList()
-                    }
-                }).addOnFailureListener {
-                    Toast.makeText(
-                        this@StudentHomeActivity,
-                        "Error, Please try again",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-        }
+        viewModel.loadInstructorsList(userDoc!!)
     }
 
-    fun yourInstructorList(){
-            val userDoc = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
-            if (userDoc != null) {
-                db.collection(Constants.STUDENT)
-                    .document(userDoc)
-                    .collection(Constants.YOUR_INSTRUCTORS)
-                    .get()
-                    .addOnCompleteListener { task ->
-                        ProgressBarClass.instance.dismissProgress()
-                        if (task.isSuccessful) {
-                            for (document in task.result) {
-                                val instructor = Instructor(
-                                    document.getData()[Constants.INSTRUCTOR_ID].toString(),
-                                    document.getData()[Constants.INSTRUCTOR_NAME].toString()
-                                )
-                                instructorList.add(instructor)
-                            }
-                            adapter!!.updateInstructorList(instructorList)
-                        } else {
-                            Log.e("HomeFragment", "Error getting documents.", task.exception)
-                        }
 
-        //                        if (filesList.isEmpty()) {
-        //                            binding.fileText.setText("Your list is empty");
-        //                        }
-                    }
-            }
-        }
 }
