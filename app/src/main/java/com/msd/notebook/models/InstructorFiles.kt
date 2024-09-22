@@ -1,6 +1,6 @@
 package com.msd.notebook.models
 
-class InstructorFiles(
+data class InstructorFiles(
     var id: String,
     var fileName: String,
     var fileUrl: String,
