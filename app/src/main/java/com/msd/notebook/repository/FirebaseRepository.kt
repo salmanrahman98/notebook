@@ -5,11 +5,41 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.msd.notebook.common.Constants
 import com.msd.notebook.models.Instructor
+import com.msd.notebook.models.InstructorFiles
 
 class FirebaseRepository {
 
     private val db = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
+
+    fun instructorFiles(userDoc: String, callback: (List<InstructorFiles>?) -> Unit) {
+        db.collection(Constants.INSTRUCTOR)
+            .document(userDoc!!)
+            .collection(Constants.YOUR_UPLOADS)
+            .get()
+            .addOnSuccessListener { task ->
+                if(!task.isEmpty) {
+                    val files = task.toObjects(InstructorFiles::class.java)
+                    callback(files)
+                }else {
+                    callback(null)
+                }
+//                if (task.isSuccessful) {
+//                    for (document in task.result) {
+//                        val file = InstructorFiles(
+//                            document.id,
+//                            document.getData()[Constants.FILE_NAME].toString(),
+//                            document.getData()[Constants.FILE_URL].toString(),
+//                            document.getData()[Constants.FILE_EXT].toString()
+//                        )
+//                        filesList.add(file)
+//                    }
+//                    adapter!!.updateFiles(filesList)
+//                } else {
+//                    Log.e("HomeFragment", "Error getting documents.", task.exception)
+//                }
+            }
+    }
 
     fun yourInstructorListFireStore(userDoc: String, callback: (List<Instructor>) -> Unit) {
         if (userDoc != null) {
@@ -52,10 +82,6 @@ class FirebaseRepository {
         instructorDetails: MutableMap<String, Any?>,
         callback: (Instructor?) -> Unit
     ) {
-//        val instructorDetails: MutableMap<String, Any?> = HashMap()
-//        instructorDetails[Constants.INSTRUCTOR_ID] = instructorId
-//        instructorDetails[Constants.INSTRUCTOR_NAME] = instructorName
-//        val userDoc = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
         if (userDoc != null) {
             db.collection(Constants.STUDENT)
                 .document(userDoc)
@@ -69,20 +95,11 @@ class FirebaseRepository {
                         )
                     )
                 }
-                /*.addOnSuccessListener(object : OnSuccessListener<DocumentReference?> {
-                    override fun onSuccess(documentReference: DocumentReference?) {
-//
-                        if(documentReference.doc)
-//                        instructorList.clear()
-//                        yourInstructorList()
-                    }
-                })*/.addOnFailureListener {
-//                    Toast.makeText(
-//                        this@StudentHomeActivity,
-//                        "Error, Please try again",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
+                .addOnFailureListener {
+
                 }
         }
     }
+
+
 }
