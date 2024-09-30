@@ -69,7 +69,8 @@ dependencies {
     //https://developers.google.com/ml-kit/vision/barcode-scanning/code-scanner
     implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
 
-
+    //library for viewing PDF
+    implementation("com.github.barteksc:android-pdf-viewer:2.8.2")
 
 
 }

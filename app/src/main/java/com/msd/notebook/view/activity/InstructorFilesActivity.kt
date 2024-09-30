@@ -5,20 +5,21 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.msd.notebook.view.adapter.FileAdapter
 import com.msd.notebook.common.Constants
 import com.msd.notebook.common.PreferenceClass
 import com.msd.notebook.common.ProgressBarClass
 import com.msd.notebook.databinding.ActivityInstructorFilesBinding
 import com.msd.notebook.models.InstructorFiles
+import com.msd.notebook.view.adapter.FileAdapter
+import com.msd.notebook.view.viewmodels.InstructorFilesViewModel
 
 class InstructorFilesActivity : AppCompatActivity() {
     var binding: ActivityInstructorFilesBinding? = null
@@ -32,11 +33,15 @@ class InstructorFilesActivity : AppCompatActivity() {
     var instructorId: String? = ""
     var instructorName: String? = ""
     var progressBarClass: ProgressBarClass? = null
+
+    private lateinit var viewModel: InstructorFilesViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInstructorFilesBinding.inflate(layoutInflater)
         val view: View = binding!!.getRoot()
         setContentView(view)
+
+        viewModel = ViewModelProvider(this)[InstructorFilesViewModel::class.java]
         instructorId = intent.getStringExtra(Constants.INSTRUCTOR_ID)
         instructorName = intent.getStringExtra(Constants.INSTRUCTOR_NAME)
         binding!!.headerTitle.text = "Files of Prof. $instructorName"
@@ -65,6 +70,15 @@ class InstructorFilesActivity : AppCompatActivity() {
         binding!!.filesRecyclerView.setLayoutManager(linearLayoutManager)
         binding!!.filesRecyclerView.setAdapter(adapter)
         instructorFiles()
+    }
+
+    private fun instructorFiles() {
+        viewModel.files.observe(this) { files ->
+//            adapter?.files = files as ArrayList<InstructorFiles>?
+            adapter?.updateFiles(ArrayList(files))
+        }
+
+        viewModel.loadFiles(instructorId!!)
     }
 
     private fun downloadFile(file: InstructorFiles) {
@@ -111,27 +125,27 @@ class InstructorFilesActivity : AppCompatActivity() {
         Toast.makeText(this, "File Downloaded", Toast.LENGTH_SHORT).show()
     }
 
-    fun instructorFiles(){
-            db.collection(Constants.INSTRUCTOR)
-                .document(instructorId!!)
-                .collection(Constants.YOUR_UPLOADS)
-                .get()
-                .addOnCompleteListener { task ->
-                    ProgressBarClass.instance.dismissProgress()
-                    if (task.isSuccessful) {
-                        for (document in task.result) {
-                            val file = InstructorFiles(
-                                document.id,
-                                document.getData()[Constants.FILE_NAME].toString(),
-                                document.getData()[Constants.FILE_URL].toString(),
-                                document.getData()[Constants.FILE_EXT].toString()
-                            )
-                            filesList.add(file)
-                        }
-//                        adapter!!.setFiles(filesList)
-                    } else {
-                        Log.e("HomeFragment", "Error getting documents.", task.exception)
-                    }
-                }
-        }
+    /* fun instructorFiles() {
+         db.collection(Constants.INSTRUCTOR)
+             .document(instructorId!!)
+             .collection(Constants.YOUR_UPLOADS)
+             .get()
+             .addOnCompleteListener { task ->
+                 ProgressBarClass.instance.dismissProgress()
+                 if (task.isSuccessful) {
+                     for (document in task.result) {
+                         val file = InstructorFiles(
+                             document.id,
+                             document.getData()[Constants.FILE_NAME].toString(),
+                             document.getData()[Constants.FILE_URL].toString(),
+                             document.getData()[Constants.FILE_EXT].toString()
+                         )
+                         filesList.add(file)
+                     }
+ //                        adapter!!.setFiles(filesList)
+                 } else {
+                     Log.e("HomeFragment", "Error getting documents.", task.exception)
+                 }
+             }
+     }*/
 }
