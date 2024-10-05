@@ -47,8 +47,8 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     //Firestore library
-    implementation("com.google.firebase:firebase-firestore:24.11.1")
-    implementation("com.google.firebase:firebase-storage:20.3.0")
+    implementation("com.google.firebase:firebase-firestore:25.1.0")
+    implementation("com.google.firebase:firebase-storage:21.0.1")
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("androidx.activity:activity:1.8.0")
@@ -70,7 +70,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
 
     //library for viewing PDF
-    implementation("com.github.barteksc:android-pdf-viewer:2.8.2")
+    implementation ("com.github.afreakyelf:Pdf-Viewer:v2.0.5")
 
+    implementation("androidx.activity:activity-ktx:1.9.2")
 
 }

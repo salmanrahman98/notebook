@@ -2,9 +2,11 @@ package com.msd.notebook.view.fragments
 
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,13 +20,13 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.msd.notebook.view.adapter.FileAdapter
-import com.msd.notebook.view.adapter.FileAdapter.FileBtnClick
 import com.msd.notebook.common.Constants
 import com.msd.notebook.common.PreferenceClass
 import com.msd.notebook.common.ProgressBarClass
 import com.msd.notebook.databinding.FragmentHomeBinding
 import com.msd.notebook.models.InstructorFiles
+import com.msd.notebook.view.adapter.FileAdapter
+import com.msd.notebook.view.adapter.FileAdapter.FileBtnClick
 import java.io.File
 
 class InstructorHomeFragment : Fragment() {
@@ -56,6 +58,10 @@ class InstructorHomeFragment : Fragment() {
                 //delete code
                 removeProductFromFirestore(file)
             }
+
+            override fun cardClcik(file: InstructorFiles?) {
+                TODO("Not yet implemented")
+            }
         })
         val linearLayoutManager = LinearLayoutManager(context)
         binding!!.filesRecyclerView.setLayoutManager(linearLayoutManager)
@@ -63,34 +69,34 @@ class InstructorHomeFragment : Fragment() {
         yourFiles()
     }
 
-    fun yourFiles(){
-            val userDoc = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
-            db.collection(Constants.INSTRUCTOR)
-                .document(userDoc!!)
-                .collection(Constants.YOUR_UPLOADS)
-                .get()
-                .addOnCompleteListener { task ->
-                    ProgressBarClass.Companion.instance.dismissProgress()
-                    if (task.isSuccessful) {
-                        for (document in task.result) {
-                            val file = InstructorFiles(
-                                document.id,
-                                document.getData()[Constants.FILE_NAME].toString(),
-                                document.getData()[Constants.FILE_URL].toString(),
-                                document.getData()[Constants.FILE_EXT].toString()
-                            )
-                            filesList.add(file)
-                        }
-                        adapter!!.updateFiles(filesList)
-                    } else {
-                        Log.e("HomeFragment", "Error getting documents.", task.exception)
+    fun yourFiles() {
+        val userDoc = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
+        db.collection(Constants.INSTRUCTOR)
+            .document(userDoc!!)
+            .collection(Constants.YOUR_UPLOADS)
+            .get()
+            .addOnCompleteListener { task ->
+                ProgressBarClass.Companion.instance.dismissProgress()
+                if (task.isSuccessful) {
+                    for (document in task.result) {
+                        val file = InstructorFiles(
+                            document.id,
+                            document.getData()[Constants.FILE_NAME].toString(),
+                            document.getData()[Constants.FILE_URL].toString(),
+                            document.getData()[Constants.FILE_EXT].toString()
+                        )
+                        filesList.add(file)
                     }
+                    adapter!!.updateFiles(filesList)
+                } else {
+                    Log.e("HomeFragment", "Error getting documents.", task.exception)
+                }
 
 //                        if (filesList.isEmpty()) {
 //                            binding.fileText.setText("Your list is empty");
 //                        }
-                }
-        }
+            }
+    }
 
     private fun openingDocumentintent() {
         var chooseFile = Intent(Intent.ACTION_GET_CONTENT)
@@ -106,6 +112,24 @@ class InstructorHomeFragment : Fragment() {
         }
     }
 
+    fun getFileName(context: Context?, uri: Uri): String? {
+        var fileName: String? = ""
+        if (uri.scheme == "content") {
+            val cursor = context?.contentResolver?.query(uri, null, null, null, null)
+            cursor?.use {
+                if (it.moveToFirst()) {
+                    val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    fileName = it.getString(nameIndex)
+                }
+            }
+        }
+        if (fileName == null) {
+            // Fallback: extract from the file path if it's not a content Uri
+            fileName = uri.path?.substring(uri.path!!.lastIndexOf('/') + 1)
+        }
+        return fileName
+    }
+
     private fun uploadFileToFirebase(data: Intent?) {
         val progressDialog = ProgressDialog(context)
         progressDialog.setTitle("Uploading...")
@@ -115,7 +139,7 @@ class InstructorHomeFragment : Fragment() {
         val uri = data!!.data
         val file = File(uri!!.path)
         val instructorDocId = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
-        val fileName = System.currentTimeMillis().toString() + ""
+        val fileName = getFileName(context, uri)
         val reference = storageRef.child(
             instructorDocId + "/" +
                     fileName + "." + getfileExtension(uri)
@@ -125,7 +149,9 @@ class InstructorHomeFragment : Fragment() {
                 val uriTask = taskSnapshot.storage.getDownloadUrl()
                 while (!uriTask.isComplete);
                 val url = uriTask.result
-                saveFileInFireStoreUploads(fileName, url, getfileExtension(uri))
+                if (fileName != null) {
+                    saveFileInFireStoreUploads(fileName, url, getfileExtension(uri))
+                }
                 Toast.makeText(context, "File Uploaded", Toast.LENGTH_SHORT).show()
                 progressDialog.dismiss()
             }

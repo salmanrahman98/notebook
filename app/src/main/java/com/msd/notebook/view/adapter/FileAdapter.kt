@@ -41,7 +41,13 @@ class FileAdapter(var context: Context, signedInAsInstructor: Boolean, fileBtnCl
                 files!![holder.getAdapterPosition()]
             )
         }
+        holder.binding.cardLayout.setOnClickListener(View.OnClickListener {
+            fileBtnClick.cardClcik(
+                files!![position]
+            )
+        })
     }
+
 
     override fun getItemCount(): Int {
         return files!!.size
@@ -49,6 +55,7 @@ class FileAdapter(var context: Context, signedInAsInstructor: Boolean, fileBtnCl
 
     interface FileBtnClick {
         fun btnClick(file: InstructorFiles?)
+        fun cardClcik(file: InstructorFiles?)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

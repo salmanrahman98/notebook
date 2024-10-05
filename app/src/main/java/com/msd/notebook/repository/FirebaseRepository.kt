@@ -60,13 +60,17 @@ class FirebaseRepository {
     }
 
     public fun getInstructorFireStore1(instructorId: String?, callback: (Instructor?) -> Unit) {
+
         db.collection(Constants.INSTRUCTOR)
-            .whereEqualTo("id", instructorId)
+            .document(instructorId!!)
             .get()
             .addOnSuccessListener { result ->
-                if (!result.isEmpty) {
-                    val instructor = result.documents[0].toObject(Instructor::class.java)
-                    callback(instructor)
+                if (result != null) {
+//                    val instructor = result.documents[0].toObject(Instructor::class.java)
+                    callback( Instructor(
+                        result[Constants.INSTRUCTOR_ID].toString(),
+                        result[Constants.INSTRUCTOR_NAME].toString()
+                    ))
                 } else {
                     callback(null)
                 }

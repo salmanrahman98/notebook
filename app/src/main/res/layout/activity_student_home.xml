@@ -40,4 +40,14 @@
         android:layout_margin="30dp"
         android:src="@drawable/add_svgrepo_com" />
 
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/speechNotesFloat"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@id/addInstructorFloat"
+        android:layout_marginHorizontal="30dp"
+        android:src="@drawable/common_full_open_on_phone" />
+
 </RelativeLayout>

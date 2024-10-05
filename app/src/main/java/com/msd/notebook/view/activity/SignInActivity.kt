@@ -85,6 +85,9 @@ class SignInActivity : AppCompatActivity() {
     private fun createUserInFirebase(signInAs: String?) {
         val db = FirebaseFirestore.getInstance()
         val user: MutableMap<String, Any> = HashMap()
+        if (signInAs!!.equals(Constants.INSTRUCTOR)) {
+            user[Constants.INSTRUCTOR_NAME] = binding!!.etUserName.getText().toString()
+        }
         user[Constants.NAME] = binding!!.etUserName.getText().toString()
         user[Constants.PASSWORD] = binding!!.etPassword.getText().toString()
         db.collection(signInAs!!)

@@ -76,6 +76,11 @@ class StudentHomeActivity : AppCompatActivity() {
                 }
         }
 
+        binding!!.speechNotesFloat.setOnClickListener(View.OnClickListener {
+            val intent = Intent(this@StudentHomeActivity, SpeechNotesActivity::class.java)
+            startActivity(intent)
+        })
+
         // instructors
         adapter = InstructorAdapter(this@StudentHomeActivity, object : InstructorItemClick {
             override fun itemClick(instructor: Instructor?) {
