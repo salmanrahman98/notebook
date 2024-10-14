@@ -73,5 +73,7 @@ dependencies {
     implementation ("com.github.afreakyelf:Pdf-Viewer:v2.0.5")
 
     implementation("androidx.activity:activity-ktx:1.9.2")
+    implementation("com.itextpdf:itextpdf:5.5.13.2")
+
 
 }

@@ -3,30 +3,41 @@ package com.msd.notebook.view.activity
 import android.Manifest
 import android.app.Activity
 import android.app.DownloadManager
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.StrictMode
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.datatransport.BuildConfig
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.itextpdf.text.pdf.PdfReader
+import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import com.msd.notebook.common.Constants
+import com.msd.notebook.common.Constants.DOCUMENT_REQUEST
 import com.msd.notebook.common.PreferenceClass
 import com.msd.notebook.common.ProgressBarClass
 import com.msd.notebook.databinding.ActivityInstructorFilesBinding
 import com.msd.notebook.models.InstructorFiles
 import com.msd.notebook.view.adapter.FileAdapter
 import com.msd.notebook.view.viewmodels.InstructorFilesViewModel
-import com.rajat.pdfviewer.PdfViewerActivity
-import com.rajat.pdfviewer.util.saveTo
 import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStream
+import java.lang.reflect.Method
 
 
 class InstructorFilesActivity : AppCompatActivity() {
@@ -73,22 +84,30 @@ class InstructorFilesActivity : AppCompatActivity() {
             }
 
             override fun cardClcik(file: InstructorFiles?) {
+
+                var path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                    .toString() + "/Assignment.pdf"
+//                val pdfFile = File(path)
+//                extractTextFromPdf(path)
+                openPdfFile(path)
 //                val intent = Intent(this@InstructorFilesActivity, PdfViewerActivity1::class.java)
 ////                intent.putExtra(Constants.INSTRUCTOR_ID, instructor?.instructor_id)
 //                intent.putExtra("fileName", file?.fileName)
 //                startActivity(intent)
-                val xyzFolder =
-                    File(
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                            .toString() + "/sample.pdf"
-                    )
-                PdfViewerActivity.launchPdfFromPath(
-                    context = this@InstructorFilesActivity,
-                    path = xyzFolder.path,
-                    pdfTitle = "Title",
-                    saveTo = saveTo.ASK_EVERYTIME,
-                    fromAssets = false
-                )
+//                val xyzFolder =
+//                    File(
+//                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+//                            .toString() + "/sample.pdf"
+//                    )
+//                PdfViewerActivity.launchPdfFromPath(
+//                    context = this@InstructorFilesActivity,
+//                    path = xyzFolder.path,
+//                    pdfTitle = "Title",
+//                    saveTo = saveTo.ASK_EVERYTIME,
+//                    fromAssets = false
+//                )
+
+
             }
 
         })
@@ -121,6 +140,30 @@ class InstructorFilesActivity : AppCompatActivity() {
                 REQUEST_EXTERNAL_STORAGE
             )
         }
+    }
+
+    @Throws(IOException::class)
+    private fun convertFileToInputStream(file: File): InputStream {
+        if (file.exists()) {
+            return FileInputStream(file) // Convert the File to InputStream
+        } else {
+            throw IOException("File not found")
+        }
+    }
+
+    fun extractTextFromPdf(pdfPath: String?): String {
+        val text = StringBuilder()
+        try {
+            val reader = PdfReader(convertFileToInputStream(File(pdfPath)))
+            val pages = reader.numberOfPages
+            for (i in 1..pages) {
+                text.append(PdfTextExtractor.getTextFromPage(reader, i))
+            }
+            reader.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return text.toString()
     }
 
     private fun instructorFiles() {
@@ -169,6 +212,56 @@ class InstructorFilesActivity : AppCompatActivity() {
                 "On Failure",
                 Toast.LENGTH_SHORT
             ).show()
+        }
+    }
+
+    private fun openingDocumentintent() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.setType("application/*") //i.setType("image/*|application/pdf|audio/*");
+        //    intent.setType("application/doc");
+        //   intent.setType("application/docx");
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        try {
+            startActivityForResult(
+                Intent.createChooser(intent, "Select File"),
+                DOCUMENT_REQUEST
+            )
+        } catch (ex: java.lang.Exception) {
+            println("browseClick :$ex")
+        }
+    }
+
+    private fun openPdfFile(path: String) {
+        // Replace with the path to your PDF file
+        val pdfFile = File(path)
+
+        if (Build.VERSION.SDK_INT >= 24) {
+            try {
+                val m: Method = StrictMode::class.java.getMethod("disableDeathOnFileUriExposure")
+                m.invoke(null)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+
+//        val path = FileProvider.getUriForFile(
+//            this,
+//            this.getApplicationContext().getPackageName() + ".provider",
+//            createImageFile()
+//        )
+        val uri = FileProvider.getUriForFile(
+            this,
+            BuildConfig.APPLICATION_ID + ".provider",
+            pdfFile
+        )
+
+        val pdfOpenintent = Intent(Intent.ACTION_VIEW)
+        pdfOpenintent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        pdfOpenintent.setDataAndType(uri, "application/pdf")
+        try {
+            startActivity(pdfOpenintent)
+        } catch (e: ActivityNotFoundException) {
         }
     }
 
