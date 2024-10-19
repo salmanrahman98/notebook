@@ -1,36 +1,22 @@
 package com.msd.notebook.view.activity
 
-import android.content.Intent
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.speech.RecognizerIntent
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.msd.notebook.databinding.ActivitySpeechNotesBinding
 import com.msd.notebook.view.viewmodels.SpeechNotesViewModel
-import java.util.Locale
 
 class SpeechNotesActivity : AppCompatActivity() {
     private var binding: ActivitySpeechNotesBinding? = null
     private lateinit var viewModel: SpeechNotesViewModel
-
-    private lateinit var startForResult: ActivityResultLauncher<Intent>
-
-    private val recognizerIntent = Intent(
-        RecognizerIntent
-            .ACTION_RECOGNIZE_SPEECH
-    ).apply {
-        putExtra(
-            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-        )
-        putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-        putExtra(RecognizerIntent.EXTRA_PROMPT, "Bol Bey")
-
-    }
+    private val RECORD_AUDIO_PERMISSION_CODE = 200
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,38 +29,66 @@ class SpeechNotesActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[SpeechNotesViewModel::class.java]
 
-        /* viewModel.speechText.observe(this) { recognizedText ->
-             binding!!.speechNotesTv.text = recognizedText
-         }
+        setupButtons()
+        observeViewModel()
+        checkPermission()
+    }
 
-         binding!!.startRecordingBtn.setOnClickListener {
-             viewModel.startSpeechRecognition(this)
-         }*/
-
-        viewModel.speechText.observe(this) { recognizedText ->
-            binding!!.speechNotesTv.text = recognizedText
-        }
-
-        startForResult =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == RESULT_OK && result.data != null) {
-                    val data: Intent? = result.data
-                    val matches: ArrayList<String>? =
-                        data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                    if (matches != null && matches.isNotEmpty()) {
-                        viewModel.onSpeechRecognitionResult(matches[0])
-                    }
-                }
-            }
-
-        viewModel.startSpeechRecognition.observe(this) {
-            startForResult.launch(recognizerIntent)
-        }
-
+    private fun setupButtons() {
         binding!!.startRecordingBtn.setOnClickListener {
-            viewModel.onRequestSpeechRecognition()
+            viewModel.startRecording(this)
         }
 
+        binding!!.stopRecordingBtn.setOnClickListener {
+            viewModel.stopRecording()
+        }
 
+        binding!!.pausePlayBtn.setOnClickListener {
+            viewModel.playPauseAudio()
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.recordingState.observe(this) { isRecording ->
+            binding!!.startRecordingBtn.isEnabled = !isRecording
+            binding!!.stopRecordingBtn.isEnabled = isRecording
+        }
+
+        viewModel.playbackState.observe(this) { isPlaying ->
+            binding!!.pausePlayBtn.text = if (isPlaying) "Pause" else "Play"
+        }
+
+        viewModel.recordingResult.observe(this) { result ->
+            Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    private fun checkPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.RECORD_AUDIO),
+                RECORD_AUDIO_PERMISSION_CODE
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == RECORD_AUDIO_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Audio Recording Permission Granted", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                Toast.makeText(this, "Audio Recording Permission Denied", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

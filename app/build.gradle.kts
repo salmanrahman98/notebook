@@ -74,4 +74,11 @@ dependencies {
 
     implementation("androidx.activity:activity-ktx:1.9.2")
 
+    //implementation("com.google.cloud:libraries-geminiflash:1.0.0")
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
+
+
+
 }

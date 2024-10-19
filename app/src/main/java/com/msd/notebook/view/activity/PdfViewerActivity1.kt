@@ -36,18 +36,6 @@ class PdfViewerActivity1 : AppCompatActivity() {
 
         if (xyzFolder.exists()) {
 
-//            PdfViewerActivity.launchPdfFromPath(
-//                context = this,
-//                path = xyzFolder.path,
-//                pdfTitle = "Title1",
-//                saveTo = saveTo.ASK_EVERYTIME,
-//                fromAssets = false
-//            )
-//            binding.pdfView.initWithUrl(
-//                url = "https://firebasestorage.googleapis.com/v0/b/notebookmsd.appspot.com/o/MEnpTG110hdz4f5uzHhL%2F1727734261746.pdf?alt=media&token=a39e1577-905f-4b28-8a0c-f3f40f8f5996",
-//                lifecycleCoroutineScope = lifecycleScope,
-//                lifecycle = lifecycle
-//            )
         } else {
             Toast.makeText(this, "File Not found ", Toast.LENGTH_SHORT).show()
         }

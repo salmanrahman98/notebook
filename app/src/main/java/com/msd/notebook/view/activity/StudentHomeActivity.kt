@@ -77,7 +77,7 @@ class StudentHomeActivity : AppCompatActivity() {
         }
 
         binding!!.speechNotesFloat.setOnClickListener(View.OnClickListener {
-            val intent = Intent(this@StudentHomeActivity, SpeechNotesActivity::class.java)
+            val intent = Intent(this@StudentHomeActivity, GeminiChatActivity::class.java)
             startActivity(intent)
         })
 

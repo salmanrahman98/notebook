@@ -1,53 +1,50 @@
 package com.msd.notebook.view.viewmodels
 
-import android.app.Activity
-import android.content.Intent
-import android.speech.RecognizerIntent
-import androidx.activity.ComponentActivity
-import androidx.activity.result.contract.ActivityResultContracts
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.util.Locale
+import com.msd.notebook.common.AudioRecordingManager
 
 class SpeechNotesViewModel : ViewModel() {
 
-    private val _speechText = MutableLiveData<String>()
-    val speechText: LiveData<String> = _speechText
+    private val audioRecorder = AudioRecordingManager()
 
-    private val _startSpeechRecognition = MutableLiveData<Unit>()
-    val startSpeechRecognition: LiveData<Unit> = _startSpeechRecognition
+    private val _recordingState = MutableLiveData<Boolean>()
+    val recordingState: LiveData<Boolean> = _recordingState
 
-    fun onRequestSpeechRecognition() {
-        _startSpeechRecognition.value = Unit
+    private val _actionResult = MutableLiveData<String>()
+    val recordingResult: LiveData<String> = _actionResult
+
+    private val _playbackState = MutableLiveData<Boolean>()
+    val playbackState: LiveData<Boolean> = _playbackState
+
+    fun startRecording(context: Context) {
+        val result = audioRecorder.startRecording(context)
+        _recordingState.value = true
+        _actionResult.value = result
     }
 
-    fun onSpeechRecognitionResult(result: String) {
-        _speechText.value = result
-    }
-/*
-
-    private val recognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-        putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now...")
-        putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+    fun stopRecording() {
+        val result = audioRecorder.stopRecording()
+        _recordingState.value = false
+        _actionResult.value = result
     }
 
-    fun startSpeechRecognition(activity: ComponentActivity) {
-        activity.registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ){
-            result ->
-            if(result.resultCode == Activity.RESULT_OK){
-                val data: Intent? = result.data
-                val matches: ArrayList<String>? = data?.
-                getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                if (matches!=null && matches.isNotEmpty()){
-                    _speechText.value = matches[0]
-                }
-            }
-        }.launch(recognizerIntent)
-    }*/
+    fun playPauseAudio() {
+        val result = audioRecorder.playPauseAudio()
+        _playbackState.value = result.startsWith("Playing") || result.startsWith("Audio resumed")
+        _actionResult.value = result
+    }
 
+    fun stopPlaying() {
+        audioRecorder.stopPlaying()
+        _playbackState.value = false
+        _actionResult.value = "Playback stopped"
+    }
 
+    override fun onCleared() {
+        super.onCleared()
+        audioRecorder.release()
+    }
 }
