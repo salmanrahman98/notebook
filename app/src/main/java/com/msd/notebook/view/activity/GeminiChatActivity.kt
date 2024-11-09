@@ -50,6 +50,6 @@ class GeminiChatActivity : AppCompatActivity() {
                 }
             }
         }
-
+632
     }
 }

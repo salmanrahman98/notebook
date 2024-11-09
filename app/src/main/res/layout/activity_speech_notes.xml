@@ -43,6 +43,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stopRecordingBtn" />
 
+    <Button
+        android:id="@+id/uploadFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:shadowDy="@integer/google_play_services_version"
+        android:text="Upload"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pausePlayBtn" />
+
     <TextView
         android:id="@+id/speechNotesTv"
         android:layout_width="match_parent"
@@ -54,7 +66,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startRecordingBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/uploadFile" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
