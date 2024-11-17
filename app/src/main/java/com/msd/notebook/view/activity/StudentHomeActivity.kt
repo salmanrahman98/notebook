@@ -105,6 +105,11 @@ class StudentHomeActivity : AppCompatActivity() {
             startActivity(intent)
         })
 
+        binding!!.pdfReaderFloat.setOnClickListener(View.OnClickListener {
+            val intent = Intent(this@StudentHomeActivity, PdfTextExtractorActivity::class.java)
+            startActivity(intent)
+        })
+
         // instructors
         adapter = InstructorAdapter(this@StudentHomeActivity, object : InstructorItemClick {
             override fun itemClick(instructor: Instructor?) {

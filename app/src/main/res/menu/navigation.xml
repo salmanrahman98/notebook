@@ -2,10 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_chats"
         android:icon="@drawable/home"
         android:iconTint="@color/navy_black"
-        android:title="@string/home" />
+        android:title="@string/chats" />
+
+    <item
+        android:id="@+id/navigation_files"
+        android:icon="@drawable/home"
+        android:iconTint="@color/navy_black"
+        android:title="@string/files" />
 
     <item
         android:id="@+id/navigation_qr"
@@ -14,9 +20,15 @@
         android:title="@string/your_qr" />
 
     <item
-        android:id="@+id/navigation_settings"
+        android:id="@+id/navigation_lectures"
         android:icon="@drawable/settings_checked"
         android:iconTint="@color/navy_black"
-        android:title="@string/title_settings" />
+        android:title="@string/title_lectures" />
+
+    <item
+        android:id="@+id/navigation_announcements"
+        android:icon="@drawable/settings_checked"
+        android:iconTint="@color/navy_black"
+        android:title="@string/title_announcements" />
 
 </menu>

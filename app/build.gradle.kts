@@ -85,7 +85,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.6")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-
-
+    implementation("com.itextpdf:itextg:5.5.10")
 
 }

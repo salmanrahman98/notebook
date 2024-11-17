@@ -19,4 +19,8 @@
     <string name="updated_password_successfully">updated password successfully</string>
     <string name="settings">Settings</string>
     <string name="your_qr_code">Your QR Code</string>
+    <string name="chats">Chats</string>
+    <string name="title_lectures">Lectures\n</string>
+    <string name="title_announcements">Announcements\n</string>
+    <string name="files">Files</string>
 </resources>

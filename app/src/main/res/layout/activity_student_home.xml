@@ -59,4 +59,13 @@
         android:layout_marginHorizontal="30dp"
         android:src="@drawable/classroom" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/pdfReaderFloat"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@id/geminiFloat"
+        android:layout_marginHorizontal="30dp"
+        android:src="@drawable/chevron_left" />
+
 </RelativeLayout>

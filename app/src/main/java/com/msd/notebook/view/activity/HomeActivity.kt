@@ -30,13 +30,13 @@ class HomeActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 .replace(R.id.my_nav_host_fragment, QrCodeDisplayFrag())
                 .commit()
             return true
-        } else if (item.itemId == R.id.navigation_home) {
+        } else if (item.itemId == R.id.navigation_files) {
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.my_nav_host_fragment, InstructorHomeFragment())
                 .commit()
             return true
-        } else if (item.itemId == R.id.navigation_settings) {
+        } else if (item.itemId == R.id.navigation_announcements) {
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.my_nav_host_fragment, SettingsFragment())
