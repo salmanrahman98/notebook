@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 import android.provider.OpenableColumns
+import android.webkit.MimeTypeMap
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -84,5 +85,14 @@ object FileUtils {
             fileName = uri.path?.substring(uri.path!!.lastIndexOf('/') + 1)
         }
         return fileName
+    }
+
+    //https://stackoverflow.com/questions/37951869/how-to-get-the-file-extension-in-android
+    fun getfileExtension(uri: Uri?,context: Context): String? {
+        val extension: String
+        val contentResolver = context.contentResolver
+        val mimeTypeMap = MimeTypeMap.getSingleton()
+        extension = mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri!!)).toString()
+        return extension
     }
 }

@@ -1,40 +1,38 @@
 package com.msd.notebook.view.fragments
 
-import android.app.Activity
 import android.app.ProgressDialog
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import com.msd.notebook.common.Constants
 import com.msd.notebook.common.PreferenceClass
-import com.msd.notebook.common.ProgressBarClass
 import com.msd.notebook.databinding.FragmentHomeBinding
 import com.msd.notebook.models.InstructorFiles
+import com.msd.notebook.view.activity.teacher.InstructorUploadsFileActivity
 import com.msd.notebook.view.adapter.FileAdapter
 import com.msd.notebook.view.adapter.FileAdapter.FileBtnClick
-import java.io.File
+import com.msd.notebook.view.viewmodels.InstructorFilesViewModel
 
-class InstructorHomeFragment : Fragment() {
+class InstructorFilesFragment : Fragment() {
     var binding: FragmentHomeBinding? = null
     var preferenceClass: PreferenceClass? = null
     var db = FirebaseFirestore.getInstance()
     var filesList: ArrayList<InstructorFiles> = ArrayList()
     var adapter: FileAdapter? = null
+    private lateinit var viewModel: InstructorFilesViewModel
+    var instructorId: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(requireContext())
@@ -51,8 +49,14 @@ class InstructorHomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this)[InstructorFilesViewModel::class.java]
+
         preferenceClass = PreferenceClass(context)
-        binding!!.addFileFloat.setOnClickListener { openingDocumentintent() }
+        binding!!.addFileFloat.setOnClickListener {
+            val intent = Intent(context, InstructorUploadsFileActivity::class.java)
+            startActivity(intent)
+        }
         adapter = FileAdapter(requireContext()!!, true, object : FileBtnClick {
             override fun btnClick(file: InstructorFiles?) {
                 //delete code
@@ -66,10 +70,27 @@ class InstructorHomeFragment : Fragment() {
         val linearLayoutManager = LinearLayoutManager(context)
         binding!!.filesRecyclerView.setLayoutManager(linearLayoutManager)
         binding!!.filesRecyclerView.setAdapter(adapter)
-        yourFiles()
+
+        instructorId = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
+
+//        yourFiles()
+        instructorFiles()
     }
 
-    fun yourFiles() {
+    private fun instructorFiles() {
+        viewModel.files.observe(viewLifecycleOwner) { files ->
+//            adapter?.files = files as ArrayList<InstructorFiles>?
+            if (files != null) {
+                adapter?.updateFiles(ArrayList(files))
+            } else {
+                Toast.makeText(context, "No files available", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.loadFiles(instructorId!!)
+    }
+
+    /*fun yourFiles() {
         val userDoc = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
         db.collection(Constants.INSTRUCTOR)
             .document(userDoc!!)
@@ -91,75 +112,40 @@ class InstructorHomeFragment : Fragment() {
                 } else {
                     Log.e("HomeFragment", "Error getting documents.", task.exception)
                 }
-
-//                        if (filesList.isEmpty()) {
-//                            binding.fileText.setText("Your list is empty");
-//                        }
             }
-    }
+    }*/
 
-    private fun openingDocumentintent() {
-        var chooseFile = Intent(Intent.ACTION_GET_CONTENT)
-        chooseFile.setType("*/*")
-        chooseFile = Intent.createChooser(chooseFile, "Choose a file")
-        startActivityForResult(chooseFile, Constants.DOCUMENT_REQUEST)
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == Constants.DOCUMENT_REQUEST && resultCode == Activity.RESULT_OK) {
-            uploadFileToFirebase(data)
-        }
-    }
-
-    fun getFileName(context: Context?, uri: Uri): String? {
-        var fileName: String? = ""
-        if (uri.scheme == "content") {
-            val cursor = context?.contentResolver?.query(uri, null, null, null, null)
-            cursor?.use {
-                if (it.moveToFirst()) {
-                    val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    fileName = it.getString(nameIndex)
-                }
-            }
-        }
-        if (fileName == null) {
-            // Fallback: extract from the file path if it's not a content Uri
-            fileName = uri.path?.substring(uri.path!!.lastIndexOf('/') + 1)
-        }
-        return fileName
-    }
-
-    private fun uploadFileToFirebase(data: Intent?) {
+    /*private fun uploadFileToFirebase(data: Intent?) {
         val progressDialog = ProgressDialog(context)
         progressDialog.setTitle("Uploading...")
         progressDialog.show()
-        val storage = FirebaseStorage.getInstance()
-        val storageRef = storage.getReference()
-        val uri = data!!.data
-        val file = File(uri!!.path)
-        val instructorDocId = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
-        val fileName = getFileName(context, uri)
-        val reference = storageRef.child(
-            instructorDocId + "/" +
-                    fileName + "." + getfileExtension(uri)
-        )
-        reference.putFile(data.data!!)
-            .addOnSuccessListener { taskSnapshot ->
-                val uriTask = taskSnapshot.storage.getDownloadUrl()
-                while (!uriTask.isComplete);
-                val url = uriTask.result
-                if (fileName != null) {
-                    saveFileInFireStoreUploads(fileName, url, getfileExtension(uri))
-                }
-                Toast.makeText(context, "File Uploaded", Toast.LENGTH_SHORT).show()
-                progressDialog.dismiss()
-            }
-            .addOnProgressListener { snapshot ->
-                val progress = 100.0 * snapshot.bytesTransferred / snapshot.totalByteCount
-                progressDialog.setMessage("Uploaded: " + progress.toInt() + "%")
-            }
-    }
+         val storage = FirebaseStorage.getInstance()
+         val storageRef = storage.getReference()
+         val uri = data!!.data
+         val file = File(uri!!.path)
+         val instructorDocId = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
+         val fileName = getFileName(context, uri)
+         val reference = storageRef.child(
+             instructorDocId + "/" +
+                     fileName + "." + getfileExtension(uri)
+         )
+         reference.putFile(data.data!!)
+             .addOnSuccessListener { taskSnapshot ->
+                 val uriTask = taskSnapshot.storage.getDownloadUrl()
+                 while (!uriTask.isComplete);
+                 val url = uriTask.result
+                 if (fileName != null) {
+                     saveFileInFireStoreUploads(fileName, url, getfileExtension(uri))
+                 }
+                 Toast.makeText(context, "File Uploaded", Toast.LENGTH_SHORT).show()
+                 progressDialog.dismiss()
+             }
+             .addOnProgressListener { snapshot ->
+                 val progress = 100.0 * snapshot.bytesTransferred / snapshot.totalByteCount
+                 progressDialog.setMessage("Uploaded: " + progress.toInt() + "%")
+             }
+    }*/
 
     private fun removeProductFromFirestore(file: InstructorFiles?) {
         val userDoc = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
@@ -175,7 +161,7 @@ class InstructorHomeFragment : Fragment() {
                         "File Removed ", Toast.LENGTH_SHORT
                     ).show()
                     filesList.clear()
-                    yourFiles()
+                    instructorFiles()
                 }
             }).addOnFailureListener {
                 Toast.makeText(
@@ -185,7 +171,7 @@ class InstructorHomeFragment : Fragment() {
             }
     }
 
-    private fun saveFileInFireStoreUploads(fileName: String, url: Uri, ext: String?) {
+    /*private fun saveFileInFireStoreUploads(fileName: String, url: Uri, ext: String?) {
         val file: MutableMap<String?, Any?> = HashMap()
         file[Constants.FILE_NAME] = fileName
         file[Constants.FILE_URL] = url
@@ -199,7 +185,7 @@ class InstructorHomeFragment : Fragment() {
                 override fun onSuccess(documentReference: DocumentReference?) {
                     Toast.makeText(context, "File Added", Toast.LENGTH_SHORT).show()
                     filesList.clear()
-                    yourFiles()
+                    instructorFiles()
                 }
             }).addOnFailureListener {
                 Toast.makeText(
@@ -208,14 +194,5 @@ class InstructorHomeFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-    }
-
-    //https://stackoverflow.com/questions/37951869/how-to-get-the-file-extension-in-android
-    private fun getfileExtension(uri: Uri?): String? {
-        val extension: String
-        val contentResolver = requireContext()!!.contentResolver
-        val mimeTypeMap = MimeTypeMap.getSingleton()
-        extension = mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri!!)).toString()
-        return extension
-    }
+    }*/
 }

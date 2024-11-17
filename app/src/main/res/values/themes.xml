@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.Notebook" parent="Base.Theme.Notebook" />
+
+    <!-- In styles.xml -->
+    <style name="CustomToolbarTitle">
+        <item name="android:fontFamily">@font/nexa_sans</item>
+    </style>
+
 </resources>

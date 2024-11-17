@@ -32,6 +32,18 @@ class FileAdapter(var context: Context, signedInAsInstructor: Boolean, fileBtnCl
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.fileNameTxt.text = files!![position].fileName
+        holder.binding.fileDateTxt.text = files!![position].fileDate
+        if (files!![position].fileSubject.equals("")) {
+            holder.binding.fileSubjectTxt.visibility = View.GONE
+        } else {
+            holder.binding.fileSubjectTxt.text = files!![position].fileSubject
+        }
+        if (files!![position].fileDescription.equals("")) {
+            holder.binding.fileDescriptionTxt.visibility = View.GONE
+        } else {
+            holder.binding.fileDescriptionTxt.text = files!![position].fileDescription
+        }
+
         holder.binding.fileUrlTxt.text = files!![position].fileUrl
         if (!signedInAsInstructor) {
             holder.binding.cardText.text = "Download"

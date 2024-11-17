@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.msd.notebook.R
 import com.msd.notebook.databinding.ActivityHomeBinding
-import com.msd.notebook.view.fragments.InstructorHomeFragment
+import com.msd.notebook.view.fragments.InstructorFilesFragment
 import com.msd.notebook.view.fragments.QrCodeDisplayFrag
 import com.msd.notebook.view.fragments.SettingsFragment
 
@@ -33,7 +33,7 @@ class HomeActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         } else if (item.itemId == R.id.navigation_files) {
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.my_nav_host_fragment, InstructorHomeFragment())
+                .replace(R.id.my_nav_host_fragment, InstructorFilesFragment())
                 .commit()
             return true
         } else if (item.itemId == R.id.navigation_announcements) {
