@@ -52,13 +52,62 @@
         android:id="@+id/uploadFileText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Please upload file to begin"
-        android:textSize="15sp"
-        android:fontFamily="@font/lato_bold"
-        android:textColor="@color/navy_black"
-        android:layout_marginTop="10dp"
         android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/lato_bold"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+        android:nestedScrollingEnabled="true"
+        android:overScrollMode="always"
+        android:text="Please upload file to begin"
+        android:textColor="@color/navy_black"
+        android:textIsSelectable="true"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/messageInputLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/uploadFileText" />
+
+    <LinearLayout
+        android:id="@+id/messageInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Message Input EditText -->
+        <EditText
+            android:id="@+id/editTextMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_edit_text"
+            android:hint="Type a message"
+            android:inputType="textMultiLine"
+            android:maxLines="3"
+            android:padding="12dp"
+            android:textSize="16sp" />
+
+        <!-- Send Button -->
+        <ImageButton
+            android:id="@+id/buttonSend"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Send Message"
+            android:src="@drawable/send_message_ic"
+            app:tint="@color/navy_black" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

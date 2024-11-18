@@ -1,7 +1,7 @@
 package com.msd.notebook.models
 
-data class ChatModel (
+data class ChatMessage (
     val message: String,
     val sentByMe: Boolean,
-    val timestamp: String
+    val timestamp: Long
 )
