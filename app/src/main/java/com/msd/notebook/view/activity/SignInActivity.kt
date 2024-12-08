@@ -52,6 +52,7 @@ class SignInActivity : AppCompatActivity() {
                             preferenceClass!!.putString(Constants.NAME, username)
                             preferenceClass!!.putString(Constants.PASSWORD, password)
                             preferenceClass!!.putString(Constants.FIRESTORE_DOC_ID, doc.id)
+                            preferenceClass!!.putString(Constants.LOGGED_IN_AS, signInAs)
                             Toast.makeText(
                                 this@SignInActivity, "User Logged in",
                                 Toast.LENGTH_SHORT
@@ -85,6 +86,9 @@ class SignInActivity : AppCompatActivity() {
     private fun createUserInFirebase(signInAs: String?) {
         val db = FirebaseFirestore.getInstance()
         val user: MutableMap<String, Any> = HashMap()
+        if (signInAs!!.equals(Constants.INSTRUCTOR)) {
+            user[Constants.INSTRUCTOR_NAME] = binding!!.etUserName.getText().toString()
+        }
         user[Constants.NAME] = binding!!.etUserName.getText().toString()
         user[Constants.PASSWORD] = binding!!.etPassword.getText().toString()
         db.collection(signInAs!!)

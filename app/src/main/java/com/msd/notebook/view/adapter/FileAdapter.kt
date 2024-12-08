@@ -32,6 +32,24 @@ class FileAdapter(var context: Context, signedInAsInstructor: Boolean, fileBtnCl
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.fileNameTxt.text = files!![position].fileName
+        holder.binding.fileDateTxt.text = files!![position].fileDate
+        if (files!![position].fileSubject.equals("")) {
+            holder.binding.fileSubjectTxt.visibility = View.GONE
+        } else {
+            holder.binding.fileSubjectTxt.text = files!![position].fileSubject
+        }
+        if (files!![position].fileDescription.equals("")) {
+            holder.binding.fileDescriptionTxt.visibility = View.GONE
+        } else {
+            holder.binding.fileDescriptionTxt.text = files!![position].fileDescription
+        }
+
+        if (signedInAsInstructor) {
+            holder.binding.deleteCard.visibility = View.VISIBLE
+        } else {
+            holder.binding.deleteCard.visibility = View.GONE
+        }
+
         holder.binding.fileUrlTxt.text = files!![position].fileUrl
         if (!signedInAsInstructor) {
             holder.binding.cardText.text = "Download"
@@ -41,7 +59,14 @@ class FileAdapter(var context: Context, signedInAsInstructor: Boolean, fileBtnCl
                 files!![holder.getAdapterPosition()]
             )
         }
+        holder.binding.downloadLayout.setOnClickListener(View.OnClickListener {
+            fileBtnClick.cardClcik(
+                files!![position]
+            )
+        })
+
     }
+
 
     override fun getItemCount(): Int {
         return files!!.size
@@ -49,6 +74,7 @@ class FileAdapter(var context: Context, signedInAsInstructor: Boolean, fileBtnCl
 
     interface FileBtnClick {
         fun btnClick(file: InstructorFiles?)
+        fun cardClcik(file: InstructorFiles?)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

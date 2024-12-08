@@ -1,70 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="10dp"
-    app:cardBackgroundColor="@color/indigo_blue">
+    android:background="@color/white">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/image_layout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/instructorNameTxt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:fontFamily="@font/lato_bold"
-            android:text="File name"
-            android:textColor="@color/white"
-            android:textSize="25sp" />
-
-        <TextView
-            android:id="@+id/instructorId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/fileNameTxt"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/lato_regular"
-            android:text="File url"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+        android:layout_centerVertical="true">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/deleteCard"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="end"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="20dp">
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:layout_marginVertical="20dp"
+            android:layout_marginLeft="20dp"
+            app:cardBackgroundColor="@color/grey_light"
+            app:cardCornerRadius="25dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/addCardText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/imgView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_centerInParent="true"
-                    android:fontFamily="@font/lato_regular"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="20dp"
-                    android:text="Delete"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:layout_margin="12dp"
+                    android:src="@drawable/lecture_svg" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/text_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/image_layout"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/header_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lato_bold"
+                android:text="Instructor"
+                android:textColor="@color/black"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/date_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:visibility="gone"
+                android:fontFamily="@font/lato_bold"
+                android:text="23 December, 2024"
+                android:textColor="@color/navy_black"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/image_layout"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="-5dp"
+        android:layout_toRightOf="@id/image_layout"
+        android:background="@color/grey_light" />
+
+</RelativeLayout>

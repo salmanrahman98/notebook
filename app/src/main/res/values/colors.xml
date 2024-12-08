@@ -6,4 +6,7 @@
     <color name="indigo_blue">#0F4C75</color>
     <color name="blue">#3282B8</color>
     <color name="light_blue">#BBE1FA</color>
+    <color name="red">#D11A2A</color>
+    <color name="grey_light">#DEDEDE</color>
+    <color name="darker_gray">#757575</color>
 </resources>

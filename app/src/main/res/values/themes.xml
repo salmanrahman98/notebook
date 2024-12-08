@@ -2,8 +2,14 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Notebook" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+         <item name="colorPrimary">@color/navy_black</item>
     </style>
 
     <style name="Theme.Notebook" parent="Base.Theme.Notebook" />
+
+    <!-- In styles.xml -->
+    <style name="CustomToolbarTitle">
+        <item name="android:fontFamily">@font/nexa_sans</item>
+    </style>
+
 </resources>

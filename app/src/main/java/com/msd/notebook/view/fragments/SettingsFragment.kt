@@ -32,13 +32,13 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         preferenceClass = PreferenceClass(context)
-        binding!!.updateCard.setOnClickListener {
+        /*binding!!.updateCard.setOnClickListener {
             if (binding!!.etPassword.getText().toString() == "") {
                 binding!!.etPassword.error = "Please enter new password"
             } else {
                 updatePassword()
             }
-        }
+        }*/
     }
 
     private fun updatePassword() {
@@ -49,7 +49,7 @@ class SettingsFragment : Fragment() {
             .addOnSuccessListener {
                 Toast.makeText(
                     context,
-                    context!!.getString(R.string.updated_password_successfully), Toast.LENGTH_SHORT
+                    requireContext().getString(R.string.updated_password_successfully), Toast.LENGTH_SHORT
                 ).show()
                 binding!!.etPassword.setText("")
             }

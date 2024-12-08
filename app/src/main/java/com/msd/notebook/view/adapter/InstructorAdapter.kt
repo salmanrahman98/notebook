@@ -11,7 +11,9 @@ import com.msd.notebook.models.Instructor
 
 class InstructorAdapter(var context: Context, var instructorItemClick: InstructorItemClick) :
     RecyclerView.Adapter<InstructorAdapter.ViewHolder>() {
+
     var instructorList : ArrayList<Instructor>? = ArrayList()
+
     fun updateInstructorList(instructorList: ArrayList<Instructor>) {
         this.instructorList = instructorList
         notifyDataSetChanged()
@@ -24,18 +26,18 @@ class InstructorAdapter(var context: Context, var instructorItemClick: Instructo
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.instructorNameTxt.text = instructorList?.get(position)!!.instructor_name
-        holder.binding.instructorId.text = instructorList!![position].instructor_id
+        holder.binding.headerTitle.text = instructorList?.get(position)!!.instructor_name
+//        holder.binding.instructorId.text = instructorList!![position].instructor_id
         holder.binding.itemRoot.setOnClickListener {
             instructorItemClick.itemClick(
                 instructorList!![holder.getAdapterPosition()]
             )
         }
-        holder.binding.deleteCard.setOnClickListener {
+        /*holder.binding.deleteCard.setOnClickListener {
             instructorItemClick.itemCardClick(
                 instructorList!![holder.getAdapterPosition()]
             )
-        }
+        }*/
     }
 
     override fun getItemCount(): Int {

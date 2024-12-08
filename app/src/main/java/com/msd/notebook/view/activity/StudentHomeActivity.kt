@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.common.moduleinstall.ModuleInstall
+import com.google.android.gms.tflite.java.TfLite
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
@@ -37,6 +40,22 @@ class StudentHomeActivity : AppCompatActivity() {
         setContentView(view)
 
         viewModel = ViewModelProvider(this).get(StudentHomeViewModel::class.java)
+        val moduleInstallClient = ModuleInstall.getClient(this)
+        val optionalModuleApi = TfLite.getClient(this)
+        moduleInstallClient
+            .areModulesAvailable(optionalModuleApi)
+            .addOnSuccessListener {
+                if (it.areModulesAvailable()) {
+                    // Modules are present on the device...
+                    Toast.makeText(this, "Modules are present", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Modules are not present on the device...
+                    Toast.makeText(this, "Modules are not present", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener {
+                // Handle failure...
+            }
 
         preferenceClass = PreferenceClass(this@StudentHomeActivity)
         //setting the options for gms barcode
@@ -76,10 +95,26 @@ class StudentHomeActivity : AppCompatActivity() {
                 }
         }
 
+        binding!!.speechNotesFloat.setOnClickListener(View.OnClickListener {
+            val intent = Intent(this@StudentHomeActivity, SpeechNotesActivity::class.java)
+            startActivity(intent)
+        })
+
+        binding!!.geminiFloat.setOnClickListener(View.OnClickListener {
+            val intent = Intent(this@StudentHomeActivity, GeminiChatActivity::class.java)
+            startActivity(intent)
+        })
+
+        binding!!.pdfReaderFloat.setOnClickListener(View.OnClickListener {
+            val intent = Intent(this@StudentHomeActivity, PdfTextExtractorActivity::class.java)
+            startActivity(intent)
+        })
+
         // instructors
         adapter = InstructorAdapter(this@StudentHomeActivity, object : InstructorItemClick {
             override fun itemClick(instructor: Instructor?) {
-                val intent = Intent(this@StudentHomeActivity, InstructorFilesActivity::class.java)
+                val intent = Intent(this@StudentHomeActivity, HomeActivity::class.java)
+                preferenceClass!!.putString(Constants.INSTRUCTOR_ID, instructor?.instructor_id)
                 intent.putExtra(Constants.INSTRUCTOR_ID, instructor?.instructor_id)
                 intent.putExtra(Constants.INSTRUCTOR_NAME, instructor?.instructor_name)
                 startActivity(intent)
