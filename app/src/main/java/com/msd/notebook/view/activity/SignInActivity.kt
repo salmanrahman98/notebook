@@ -52,6 +52,7 @@ class SignInActivity : AppCompatActivity() {
                             preferenceClass!!.putString(Constants.NAME, username)
                             preferenceClass!!.putString(Constants.PASSWORD, password)
                             preferenceClass!!.putString(Constants.FIRESTORE_DOC_ID, doc.id)
+                            preferenceClass!!.putString(Constants.LOGGED_IN_AS, signInAs)
                             Toast.makeText(
                                 this@SignInActivity, "User Logged in",
                                 Toast.LENGTH_SHORT

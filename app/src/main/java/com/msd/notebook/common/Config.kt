@@ -9,8 +9,11 @@ import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-object FileUtils {
+object Config {
 
     fun getFileFromUri(context: Context, uri: Uri): File? {
         val cursor = context.contentResolver.query(uri, null, null, null, null)
@@ -94,5 +97,17 @@ object FileUtils {
         val mimeTypeMap = MimeTypeMap.getSingleton()
         extension = mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri!!)).toString()
         return extension
+    }
+
+    fun getCurrentDateFormatted(): String {
+        val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH)
+        val currentDate = Date()
+        return dateFormat.format(currentDate)
+    }
+
+    fun getFormattedDateFromTimestamp(timestamp: Long): String {
+        val sdf = SimpleDateFormat("dd MMMM, yyyy", Locale.getDefault())
+        val date = Date(timestamp)
+        return sdf.format(date)
     }
 }

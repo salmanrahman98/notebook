@@ -1,4 +1,4 @@
-package com.msd.notebook.view.activity.teacher
+package com.msd.notebook.view.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -9,17 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.storage.FirebaseStorage
 import com.msd.notebook.R
+import com.msd.notebook.common.Config.getCurrentDateFormatted
 import com.msd.notebook.common.Constants
-import com.msd.notebook.common.FileUtils.getFileName
-import com.msd.notebook.common.FileUtils.getfileExtension
+import com.msd.notebook.common.Config.getFileName
+import com.msd.notebook.common.Config.getfileExtension
 import com.msd.notebook.common.PreferenceClass
 import com.msd.notebook.databinding.ActivityTeacherUploadsFileBinding
 import com.msd.notebook.models.InstructorFiles
 import com.msd.notebook.view.viewmodels.InstructorFilesViewModel
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class InstructorUploadsFileActivity : AppCompatActivity() {
 
@@ -62,12 +59,6 @@ class InstructorUploadsFileActivity : AppCompatActivity() {
 
             fileUpload()
         }
-    }
-
-    fun getCurrentDateFormatted(): String {
-        val dateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH)
-        val currentDate = Date()
-        return dateFormat.format(currentDate)
     }
 
     private fun fileUpload() {

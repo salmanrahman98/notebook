@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import com.msd.notebook.R
-import com.msd.notebook.common.FileUtils
+import com.msd.notebook.common.Config
 import com.msd.notebook.databinding.ActivityPdfTextExtractorBinding
 import java.io.File
 
@@ -40,7 +40,7 @@ class PdfTextExtractorActivity : AppCompatActivity() {
         })
 
         binding.btnExtractText.setOnClickListener(View.OnClickListener {
-            val file = FileUtils.getFileFromUriNew(this, selectedPdfUri!!)
+            val file = Config.getFileFromUriNew(this, selectedPdfUri!!)
             textExtractor(file)
         })
     }
@@ -81,7 +81,7 @@ class PdfTextExtractorActivity : AppCompatActivity() {
             selectedPdfUri = it
             binding.tvResult.text = "Selected PDF: ${uri.lastPathSegment}"
 //            btnExtractText.isEnabled = true
-            val file = FileUtils.getFileFromUri(this, selectedPdfUri!!)
+            val file = Config.getFileFromUri(this, selectedPdfUri!!)
             textExtractor(file)
         }
     }

@@ -113,7 +113,8 @@ class StudentHomeActivity : AppCompatActivity() {
         // instructors
         adapter = InstructorAdapter(this@StudentHomeActivity, object : InstructorItemClick {
             override fun itemClick(instructor: Instructor?) {
-                val intent = Intent(this@StudentHomeActivity, InstructorFilesActivity::class.java)
+                val intent = Intent(this@StudentHomeActivity, HomeActivity::class.java)
+                preferenceClass!!.putString(Constants.INSTRUCTOR_ID, instructor?.instructor_id)
                 intent.putExtra(Constants.INSTRUCTOR_ID, instructor?.instructor_id)
                 intent.putExtra(Constants.INSTRUCTOR_NAME, instructor?.instructor_name)
                 startActivity(intent)

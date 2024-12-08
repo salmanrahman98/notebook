@@ -44,6 +44,12 @@ class FileAdapter(var context: Context, signedInAsInstructor: Boolean, fileBtnCl
             holder.binding.fileDescriptionTxt.text = files!![position].fileDescription
         }
 
+        if (signedInAsInstructor) {
+            holder.binding.deleteCard.visibility = View.VISIBLE
+        } else {
+            holder.binding.deleteCard.visibility = View.GONE
+        }
+
         holder.binding.fileUrlTxt.text = files!![position].fileUrl
         if (!signedInAsInstructor) {
             holder.binding.cardText.text = "Download"
@@ -53,11 +59,12 @@ class FileAdapter(var context: Context, signedInAsInstructor: Boolean, fileBtnCl
                 files!![holder.getAdapterPosition()]
             )
         }
-        holder.binding.cardLayout.setOnClickListener(View.OnClickListener {
+        holder.binding.downloadLayout.setOnClickListener(View.OnClickListener {
             fileBtnClick.cardClcik(
                 files!![position]
             )
         })
+
     }
 
 

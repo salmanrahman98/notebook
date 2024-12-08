@@ -14,21 +14,27 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Notebook"
         tools:targetApi="31">
         <activity
+            android:name=".view.activity.AddAnnouncementActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.activity.DocumentBotAI_Activity"
             android:exported="true">
+
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
         </activity>
         <activity
-            android:name=".view.activity.teacher.InstructorUploadsFileActivity"
+            android:name=".view.activity.InstructorUploadsFileActivity"
             android:exported="false" />
         <activity
             android:name=".view.activity.PdfTextExtractorActivity"
@@ -57,11 +63,11 @@
         <activity
             android:name=".view.activity.BoardingScreens"
             android:exported="true">
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
         <activity
             android:name=".view.activity.LoginSelectorActivity"

@@ -1,8 +1,6 @@
 package com.msd.notebook.view.fragments
 
-import android.app.ProgressDialog
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,13 +11,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.msd.notebook.common.Constants
+import com.msd.notebook.common.Constants.INSTRUCTOR
+import com.msd.notebook.common.Constants.LOGGED_IN_AS
+import com.msd.notebook.common.Constants.STUDENT
 import com.msd.notebook.common.PreferenceClass
 import com.msd.notebook.databinding.FragmentHomeBinding
 import com.msd.notebook.models.InstructorFiles
-import com.msd.notebook.view.activity.teacher.InstructorUploadsFileActivity
+import com.msd.notebook.view.activity.DocumentBotAI_Activity
+import com.msd.notebook.view.activity.InstructorUploadsFileActivity
 import com.msd.notebook.view.adapter.FileAdapter
 import com.msd.notebook.view.adapter.FileAdapter.FileBtnClick
 import com.msd.notebook.view.viewmodels.InstructorFilesViewModel
@@ -64,17 +65,28 @@ class InstructorFilesFragment : Fragment() {
             }
 
             override fun cardClcik(file: InstructorFiles?) {
-                TODO("Not yet implemented")
+
             }
         })
         val linearLayoutManager = LinearLayoutManager(context)
         binding!!.filesRecyclerView.setLayoutManager(linearLayoutManager)
         binding!!.filesRecyclerView.setAdapter(adapter)
 
-        instructorId = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
+        instructorId = if (preferenceClass?.getString(LOGGED_IN_AS).equals(INSTRUCTOR))
+            preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID) else
+            preferenceClass!!.getString(Constants.INSTRUCTOR_ID)
+
+        binding!!.aiImg.setOnClickListener {
+            val intent = Intent(context, DocumentBotAI_Activity::class.java)
+            startActivity(intent)
+        }
 
 //        yourFiles()
         instructorFiles()
+
+        if (preferenceClass?.getString(LOGGED_IN_AS).equals(STUDENT))
+            binding?.addFileFloat?.visibility = View.GONE else
+            binding?.addFileFloat?.visibility = View.VISIBLE
     }
 
     private fun instructorFiles() {
@@ -148,7 +160,9 @@ class InstructorFilesFragment : Fragment() {
     }*/
 
     private fun removeProductFromFirestore(file: InstructorFiles?) {
-        val userDoc = preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID)
+        val userDoc = if (preferenceClass?.getString(LOGGED_IN_AS).equals(INSTRUCTOR))
+            preferenceClass!!.getString(Constants.FIRESTORE_DOC_ID) else
+            preferenceClass!!.getString(Constants.INSTRUCTOR_ID)
         db.collection(Constants.INSTRUCTOR)
             .document(userDoc!!)
             .collection(Constants.YOUR_UPLOADS)

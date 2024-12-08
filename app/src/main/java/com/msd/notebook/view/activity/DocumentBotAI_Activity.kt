@@ -3,27 +3,18 @@ package com.msd.notebook.view.activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.style.RelativeSizeSpan
-import android.text.style.StyleSpan
 import android.view.View
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
-import com.msd.notebook.R
-import com.msd.notebook.common.FileUtils
+import com.msd.notebook.common.Config
 import com.msd.notebook.databinding.ActivityDocumentBotAiBinding
 import com.msd.notebook.models.ChatMessage
 import com.msd.notebook.view.adapter.ChatAdapter
@@ -138,7 +129,7 @@ class DocumentBotAI_Activity : AppCompatActivity() {
             selectedPdfUri = it
             binding.uploadFileText.text = "Selected PDF: ${uri.lastPathSegment}"
 //            btnExtractText.isEnabled = true
-            val file = FileUtils.getFileFromUriNew(this, selectedPdfUri!!)
+            val file = Config.getFileFromUriNew(this, selectedPdfUri!!)
             textExtractor(file)
         }
     }

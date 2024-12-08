@@ -2,7 +2,6 @@ package com.msd.notebook.repository
 
 import android.app.ProgressDialog
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
@@ -11,10 +10,10 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.msd.notebook.common.Constants
-import com.msd.notebook.common.FileUtils.getfileExtension
+import com.msd.notebook.models.Announcement
 import com.msd.notebook.models.Instructor
 import com.msd.notebook.models.InstructorFiles
-import java.io.File
+import com.msd.notebook.models.Lecture
 
 class FirebaseRepository {
 
@@ -186,6 +185,75 @@ class FirebaseRepository {
                     "Error, Please try again",
                     Toast.LENGTH_SHORT
                 ).show()
+            }
+    }
+
+    fun getAnnouncements(userDoc: String, callback: (List<Announcement>) -> Unit) {
+        db.collection(Constants.INSTRUCTOR)
+            .document(userDoc!!)
+            .collection(Constants.ANNOUNCEMNTES)
+            .get()
+            .addOnSuccessListener { task ->
+                if (!task.isEmpty) {
+                    val files = task.toObjects(Announcement::class.java)
+                    callback(files)
+                } else {
+                    callback(emptyList())
+                }
+            }
+    }
+
+    fun addAnnouncement(announcement: Announcement, userDoc: String, callback: (Boolean) -> Unit) {
+
+        val announceMap: MutableMap<String?, Any?> = HashMap()
+        announceMap[Constants.HEADER] = announcement.header
+        announceMap[Constants.DESCRIPTION] = announcement.description
+        announceMap[Constants.DATE] = announcement.date
+
+        db.collection(Constants.INSTRUCTOR)
+            .document(userDoc!!)
+            .collection(Constants.ANNOUNCEMNTES)
+            .add(announceMap)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+
+    fun addLecture(lecture: Lecture, userDoc: String, callback: (Boolean) -> Unit) {
+
+        val announceMap: MutableMap<String?, Any?> = HashMap()
+        announceMap[Constants.HEADER] = lecture.header
+        announceMap[Constants.DESCRIPTION] = lecture.description
+        announceMap[Constants.NOTES] = lecture.notes
+        announceMap[Constants.DATE] = lecture.date
+
+        db.collection(Constants.INSTRUCTOR)
+            .document(userDoc!!)
+            .collection(Constants.LECTURES)
+            .add(announceMap)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+
+    fun getLectures(userDoc: String, callback: (List<Lecture>) -> Unit) {
+        db.collection(Constants.INSTRUCTOR)
+            .document(userDoc!!)
+            .collection(Constants.LECTURES)
+            .get()
+            .addOnSuccessListener { task ->
+                if (!task.isEmpty) {
+                    val lectures = task.toObjects(Lecture::class.java)
+                    callback(lectures)
+                } else {
+                    callback(emptyList())
+                }
             }
     }
 
