@@ -8,7 +8,7 @@ The app provides students and educators with a collaborative environment, simpli
 
 🌟 Features
 
-Lecture Overviews: Summarized key points from each lecture for quick understanding. 	
+Lecture Overviews: Summarized key points from each lecture for quick understanding.
 Note Sharing: Share notes, assignments, and resources efficiently.
 Announcements: Centralized updates for schedules, reminders, and important information.
 PDF Overviews: Summaries and easy navigation for uploaded documents.
